@@ -1,0 +1,952 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laboratorio de los mercados · 4.º ESO</title>
+<style>
+:root{
+ --blue:#2563eb;--orange:#e58a24;--green:#16803d;
+ --ink:#192a40;--muted:#63738a;--bg:#f2f5fa;
+ --line:#dce4ee;--soft:#f3f6fb
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:16px/1.55 system-ui,Segoe UI,Arial,sans-serif}
+header{background:#172e50;color:white;padding:23px 5%}
+header h1{margin:0;font-size:1.65rem}
+header p{margin:4px 0;color:#cbd8e9}
+main{max-width:1160px;margin:auto;padding:22px 16px 55px}
+nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+button,select,textarea{
+ font:inherit;border:1px solid var(--line);border-radius:9px;
+ padding:10px 13px;background:white;color:var(--ink)
+}
+button{font-weight:650;cursor:pointer}
+button:hover{filter:brightness(.96)}
+button.active,.primary{background:var(--blue);border-color:var(--blue);color:white}
+button:disabled{opacity:.5;cursor:not-allowed}
+.panel{background:white;border:1px solid var(--line);
+ border-radius:14px;padding:20px;margin-bottom:15px}
+.grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+h2{font-size:1.35rem;margin:0 0 12px}
+h3{font-size:1.05rem;margin:0 0 10px}
+p{margin:9px 0 14px}
+.small{font-size:.9rem;color:var(--muted)}
+.graph{width:100%;height:auto;display:block}
+.control{border:1px solid var(--line);padding:14px;
+ border-radius:10px;margin-bottom:12px}
+.control label{display:block;font-weight:650}
+input[type=range]{width:100%;accent-color:var(--blue);margin:15px 0}
+.rangeLabels{display:flex;justify-content:space-between;
+ font-size:.79rem;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.metric{background:var(--soft);padding:12px;border-radius:10px}
+.metric strong{display:block;font-size:1.3rem}
+.metric small{display:block;color:var(--muted)}
+.note{background:#edf5ff;border-left:4px solid var(--blue);
+ padding:13px;border-radius:7px;margin-top:13px}
+.good{background:#edf8ef;border-left-color:var(--green)}
+.warn{background:#fff5e7;border-left-color:var(--orange)}
+.options{display:grid;gap:7px;margin:12px 0}
+.options label{padding:9px;border:1px solid var(--line);
+ border-radius:8px;display:block;cursor:pointer}
+.options input{margin-right:8px;accent-color:var(--blue)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.hidden{display:none!important}
+.tag{display:inline-block;background:var(--soft);
+ color:var(--muted);padding:5px 10px;border-radius:20px;font-size:.8rem}
+.progress{height:8px;background:#dce5ef;border-radius:10px;overflow:hidden}
+#progressBar{height:100%;background:var(--green);width:0%;transition:width .2s}
+.progressText{font-size:.8rem;color:var(--muted);margin-top:6px}
+select{max-width:100%;width:100%}
+a{color:var(--blue)}
+.footer{text-align:center;color:var(--muted);
+ font-size:.82rem;margin-top:25px}
+@media(max-width:760px){
+ .grid,.two{grid-template-columns:1fr}
+ .panel{padding:15px}
+ header h1{font-size:1.35rem}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>Laboratorio de los mercados</h1>
+<p>Aprende, experimenta y comprende cómo se forman los precios · 4.º ESO</p>
+</header>
+<main>
+<div class="panel">
+<div class="progress"><div id="progressBar"></div></div>
+<div id="progressText" class="progressText">Tu recorrido de aprendizaje</div>
+</div>
+
+<nav aria-label="Módulos">
+<button class="active" data-tab="demand">1. Demanda</button>
+<button data-tab="supply">2. Oferta</button>
+<button data-tab="balance">3. Equilibrio</button>
+<button data-tab="experiment">4. Experimenta</button>
+<button data-tab="cases">5. Casos</button>
+<button data-tab="challenge">6. Desafíos</button>
+<button data-tab="housing">7. Alquiler</button>
+</nav>
+
+<!-- DEMANDA -->
+<section id="demand">
+<div class="panel">
+<span class="tag">Módulo 1 · Comprendo</span>
+<h2 style="margin-top:12px">¿Por qué compramos más o menos?</h2>
+<p>Imagina que una entrada de cine cuesta 12 €. Si su precio bajara a
+5 €, probablemente más personas estarían dispuestas a comprar entradas.</p>
+<p><strong>La demanda</strong> describe la relación entre las cantidades
+que los consumidores están dispuestos y pueden comprar y los posibles
+precios de un bien, durante un periodo determinado y manteniendo
+constantes los demás factores.</p>
+<p><strong>Ley de la demanda:</strong> generalmente, si baja el precio
+de un bien, aumenta su cantidad demandada; si sube, disminuye,
+manteniéndose constantes los demás factores.</p>
+<div class="note">No confundas <strong>demanda</strong> (toda la relación
+entre precios y cantidades) con <strong>cantidad demandada</strong>
+(la cantidad correspondiente a un precio concreto).</div>
+</div>
+<div class="grid">
+<div class="panel">
+<h2>Experimenta con la demanda</h2>
+<svg id="dGraph" class="graph" viewBox="0 0 520 400"
+ role="img" aria-label="Curva de demanda"></svg>
+<div id="dInfo" class="note"></div>
+</div>
+<div class="panel">
+<h2>1. ¿Qué ocurre si cambia el precio?</h2>
+<label for="dPrice">Precio del producto</label>
+<input id="dPrice" type="range" min="10" max="70" step="5" value="35">
+<p><strong id="dPriceText"></strong></p>
+<p class="small">Observa cómo cambia la cantidad demandada y cómo
+el punto se mueve sobre la curva.</p>
+<h2 style="margin-top:25px">2. ¿Qué desplaza toda la curva?</h2>
+<select id="dFactor"></select>
+<div id="dFactorText" class="note"></div>
+<div class="actions">
+<button id="resetDemand">Reiniciar</button>
+</div>
+</div>
+</div>
+<div class="panel">
+<h3>Comprueba lo aprendido</h3>
+<p>Si sube el precio del propio bien, sin cambiar ningún otro factor,
+¿qué ocurre en el modelo?</p>
+<div class="options" id="dQuiz"></div>
+<button class="primary" onclick="checkIntroQuiz('d')">Comprobar</button>
+<div id="dFeedback"></div>
+</div>
+</section>
+
+<!-- OFERTA -->
+<section id="supply" class="hidden">
+<div class="panel">
+<span class="tag">Módulo 2 · Comprendo</span>
+<h2 style="margin-top:12px">¿Por qué las empresas venden más o menos?</h2>
+<p>Imagina una panadería. Si puede vender el pan a un precio mayor,
+generalmente tendrá incentivos para ofrecer más unidades,
+siempre que sus costes y las demás condiciones no cambien.</p>
+<p><strong>La oferta</strong> describe la relación entre las cantidades
+que los productores están dispuestos y pueden vender y los posibles
+precios de un bien, durante un periodo determinado y manteniendo
+constantes los demás factores.</p>
+<p><strong>Ley de la oferta:</strong> en el modelo básico, cuanto
+mayor sea el precio de un bien, mayor será normalmente su cantidad
+ofrecida, manteniéndose constantes los demás factores.</p>
+<div class="note">Un cambio del precio del propio producto provoca
+un movimiento <strong>a lo largo de la oferta</strong>.
+Un cambio de costes, tecnología u otros determinantes puede
+<strong>desplazar toda la curva</strong>.</div>
+</div>
+<div class="grid">
+<div class="panel">
+<h2>Experimenta con la oferta</h2>
+<svg id="sGraph" class="graph" viewBox="0 0 520 400"
+ role="img" aria-label="Curva de oferta"></svg>
+<div id="sInfo" class="note"></div>
+</div>
+<div class="panel">
+<h2>1. ¿Qué ocurre si cambia el precio?</h2>
+<label for="sPrice">Precio del producto</label>
+<input id="sPrice" type="range" min="10" max="70" step="5" value="35">
+<p><strong id="sPriceText"></strong></p>
+<p class="small">Observa el movimiento del punto sobre la curva.</p>
+<h2 style="margin-top:25px">2. ¿Qué desplaza toda la oferta?</h2>
+<select id="sFactor"></select>
+<div id="sFactorText" class="note"></div>
+<button id="resetSupply">Reiniciar</button>
+</div>
+</div>
+<div class="panel">
+<h3>Comprueba lo aprendido</h3>
+<p>Si aumenta el coste de la harina utilizada para producir pan,
+manteniendo constantes los demás factores, ¿qué sucede?</p>
+<div class="options" id="sQuiz"></div>
+<button class="primary" onclick="checkIntroQuiz('s')">Comprobar</button>
+<div id="sFeedback"></div>
+</div>
+</section>
+
+<!-- EQUILIBRIO -->
+<section id="balance" class="hidden">
+<div class="panel">
+<span class="tag">Módulo 3 · Comprendo</span>
+<h2 style="margin-top:12px">¿Cómo se determina el equilibrio?</h2>
+<p>La demanda representa las decisiones de los compradores y la oferta
+las de los vendedores. Su intersección determina el
+<strong>precio y la cantidad de equilibrio</strong> en el modelo.</p>
+<p>Si el precio está por debajo del equilibrio, la cantidad demandada
+supera a la ofrecida: aparece un <strong>exceso de demanda</strong>.</p>
+<p>Si está por encima, ocurre lo contrario: aparece un
+<strong>exceso de oferta</strong>.</p>
+</div>
+<div class="grid">
+<div class="panel">
+<h2>Busca el equilibrio</h2>
+<svg id="bGraph" class="graph" viewBox="0 0 520 400"></svg>
+<div id="bInfo" class="note"></div>
+</div>
+<div class="panel">
+<h2>Modifica el precio de mercado</h2>
+<label for="bPrice">Precio fijado</label>
+<input id="bPrice" type="range" min="10" max="70" step="5" value="20">
+<div class="metrics">
+<div class="metric"><small>Cantidad demandada</small><strong id="bQd"></strong></div>
+<div class="metric"><small>Cantidad ofrecida</small><strong id="bQs"></strong></div>
+</div>
+<div class="actions">
+<button class="primary" id="bEqBtn">Ir al equilibrio</button>
+</div>
+<div class="note">
+<strong>Investiga:</strong> ¿por qué un exceso de demanda genera
+presiones para que suba el precio en un mercado competitivo?
+</div>
+</div>
+</div>
+<div class="panel">
+<h3>Comprueba lo aprendido</h3>
+<p>Si el precio se sitúa por encima del equilibrio, ¿qué aparece?</p>
+<div class="options" id="bQuiz"></div>
+<button class="primary" onclick="checkIntroQuiz('b')">Comprobar</button>
+<div id="bFeedback"></div>
+</div>
+</section>
+
+<!-- EXPERIMENTA -->
+<section id="experiment" class="hidden">
+<div class="grid">
+<div class="panel">
+<h2>Laboratorio de oferta y demanda</h2>
+<svg id="eGraph" class="graph" viewBox="0 0 520 400"></svg>
+<div class="metrics">
+<div class="metric"><small>Precio de equilibrio</small>
+<strong id="eP"></strong></div>
+<div class="metric"><small>Cantidad de equilibrio</small>
+<strong id="eQ"></strong></div>
+</div>
+<div id="eInfo" class="note"></div>
+</div>
+<div class="panel">
+<h2>Desplaza las curvas</h2>
+<div class="control">
+<label for="eD" style="color:var(--blue)">Demanda</label>
+<input id="eD" type="range" min="-40" max="40" step="10" value="0">
+<div class="rangeLabels"><span>Disminuye</span><span>Sin cambios</span>
+<span>Aumenta</span></div>
+</div>
+<div class="control">
+<label for="eS" style="color:var(--orange)">Oferta</label>
+<input id="eS" type="range" min="-40" max="40" step="10" value="0">
+<div class="rangeLabels"><span>Disminuye</span><span>Sin cambios</span>
+<span>Aumenta</span></div>
+</div>
+<div class="actions">
+<button id="eBoth">Permitir cambios simultáneos</button>
+<button class="primary" id="eReset">Reiniciar</button>
+</div>
+<div class="note">
+<strong>Piensa antes de mover las curvas.</strong>
+¿Qué efecto tendrá sobre el equilibrio el desplazamiento que has elegido?
+</div>
+</div>
+</div>
+</section>
+
+<!-- CASOS -->
+<section id="cases" class="hidden">
+<div class="panel">
+<span class="tag" id="caseCount"></span>
+<h2 style="margin-top:12px" id="caseTitle"></h2>
+<p id="caseText"></p>
+<h3>¿Qué curva se desplaza?</h3>
+<div id="caseCurve" class="options"></div>
+<h3>¿Cómo cambia el equilibrio?</h3>
+<div id="caseEffect" class="options"></div>
+<div class="actions">
+<button class="primary" id="caseCheck">Comprobar</button>
+<button id="caseNext">Siguiente situación</button>
+</div>
+<div id="caseResult"></div>
+</div>
+</section>
+
+<!-- DESAFÍOS -->
+<section id="challenge" class="hidden">
+<div class="panel">
+<h2>Pon a prueba tus conocimientos</h2>
+<p>Responde sin consultar las soluciones.</p>
+<div id="challengeContent"></div>
+<div class="actions">
+<button class="primary" id="challengeCheck">Corregir</button>
+<button id="challengeReset">Reiniciar</button>
+</div>
+<div id="challengeResult"></div>
+</div>
+</section>
+
+<!-- ALQUILER -->
+<section id="housing" class="hidden">
+<div class="panel">
+<span class="tag">Reto final · Economía aplicada</span>
+<h2 style="margin-top:12px">¿Qué pasaría si...? El mercado del alquiler</h2>
+<p>En España, el acceso a la vivienda es una cuestión económica y social
+importante. Las características del mercado pueden hacer que determinadas
+medidas tengan efectos distintos a los esperados.</p>
+<p>La oferta suele ser bastante rígida a corto plazo: construir viviendas
+requiere suelo, inversión, permisos, materiales y tiempo. La demanda
+también puede ser poco elástica cuando las personas tienen pocas
+alternativas de alojamiento.</p>
+<p>Pero no existe un único mercado de alquiler. Las condiciones
+varían entre ciudades, barrios, tipos de vivienda y hogares.</p>
+<div class="note">En este laboratorio los precios y cantidades son
+<strong>hipotéticos</strong>. Los resultados proceden del modelo,
+no son estimaciones de las consecuencias reales de una medida en España.</div>
+</div>
+<div class="grid">
+<div class="panel">
+<h2>Gráfico del alquiler</h2>
+<svg id="hGraph" class="graph" viewBox="0 0 520 400"></svg>
+<div class="metrics">
+<div class="metric"><small id="hPriceLabel">Alquiler</small>
+<strong id="hPrice"></strong></div>
+<div class="metric"><small id="hQuantityLabel">Viviendas alquiladas</small>
+<strong id="hQuantity"></strong></div>
+</div>
+<div id="hInfo" class="note"></div>
+</div>
+<div class="panel">
+<h2>Analiza una medida</h2>
+<label for="hHorizon"><strong>Horizonte temporal</strong></label>
+<select id="hHorizon">
+<option value="short">Corto plazo: oferta muy inelástica</option>
+<option value="long">Largo plazo: oferta más elástica</option>
+</select>
+<p id="hElasticity" class="small"></p>
+<label for="hPolicy"><strong>Propuesta</strong></label>
+<select id="hPolicy"></select>
+<div class="control" style="margin-top:12px">
+<h3 id="hTitle"></h3>
+<p id="hDescription"></p>
+<p class="small" id="hMechanism"></p>
+</div>
+<h3>Antes de simular, predice</h3>
+<p>¿Qué ocurrirá con el alquiler mensual?</p>
+<div class="options" id="hPredictP"></div>
+<p>¿Y con el número de viviendas alquiladas?</p>
+<div class="options" id="hPredictQ"></div>
+<div class="actions">
+<button class="primary" id="hSimulate">Comprobar</button>
+<button id="hReset">Reiniciar</button>
+</div>
+<div id="hFeedback"></div>
+</div>
+</div>
+<div class="panel">
+<h2>Modo avanzado: combina políticas</h2>
+<p>Selecciona hasta tres medidas y observa el resultado de sus
+efectos hipotéticos combinados.</p>
+<div id="hCombine" class="two"></div>
+<div class="actions">
+<button class="primary" id="hCombineRun">Simular combinación</button>
+<button id="hCombineClear">Limpiar</button>
+</div>
+<div id="hCombineResult"></div>
+</div>
+<div class="panel">
+<h2>¿Qué podemos concluir?</h2>
+<p>Los modelos permiten comprender mecanismos económicos, pero sus
+resultados dependen de los supuestos. Para valorar una política real
+también debemos estudiar a quién afecta, sus costes, su aplicación,
+la reacción de las personas y las posibles consecuencias no previstas.</p>
+<div class="note">
+<strong>Reflexión final:</strong> ¿qué pretende conseguir la medida,
+cómo podrían cambiar los incentivos y qué información necesitaríamos
+para valorar sus resultados reales?
+</div>
+<p class="small">Fuentes para profundizar:
+<a href="https://www.bde.es/" target="_blank" rel="noopener">Banco de España</a> ·
+<a href="https://www.boe.es/buscar/act.php?id=BOE-A-2023-12203"
+target="_blank" rel="noopener">Ley 12/2023 de vivienda</a>.
+</p>
+</div>
+</section>
+
+<div class="footer">
+Economía y Emprendimiento · 4.º ESO · Recurso educativo interactivo
+</div>
+</main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const BLUE="#2563eb",ORANGE="#e58a24",GREEN="#16803d";
+const fmt=n=>Math.round(n).toLocaleString("es-ES");
+const sign=n=>n>.001?"aumenta":n<-.001?"disminuye":"no cambia";
+const NS="http://www.w3.org/2000/svg";
+const completed=new Set();
+
+function finish(id){
+ completed.add(id);
+ $("progressBar").style.width=(completed.size/7*100)+"%";
+ $("progressText").textContent=completed.size+
+ " de 7 módulos con actividad completada en esta sesión";
+}
+function options(name,arr){
+ return arr.map(([v,t])=>`<label><input type="radio"
+ name="${name}" value="${v}">${t}</label>`).join("");
+}
+function selected(name){
+ return document.querySelector(`input[name="${name}"]:checked`)?.value??null;
+}
+function message(id,html,ok=true){
+ $(id).innerHTML=`<div class="note ${ok?"good":"warn"}">${html}</div>`;
+}
+function el(svg,tag,attrs={},txt){
+ const e=document.createElementNS(NS,tag);
+ Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+ if(txt!==undefined)e.textContent=String(txt);
+ svg.appendChild(e);return e;
+}
+function line(svg,x1,y1,x2,y2,color,w=2,dash=""){
+ el(svg,"line",{x1,y1,x2,y2,stroke:color,
+ "stroke-width":w,"stroke-dasharray":dash});
+}
+function text(svg,x,y,t,color="#334155",size=12){
+ el(svg,"text",{x,y,fill:color,"font-size":size},t);
+}
+function frame(svg,maxQ=180,maxP=80){
+ svg.replaceChildren();
+ const xp=q=>57+q/maxQ*427;
+ const yp=p=>342-p/maxP*290;
+ for(let q=0;q<=maxQ+.01;q+=maxQ/6){
+  line(svg,xp(q),yp(0),xp(q),yp(maxP),"#e2e8f0",1);
+  text(svg,xp(q)-8,yp(0)+18,fmt(q),"#64748b",10);
+ }
+ for(let p=0;p<=maxP+.01;p+=maxP/8){
+  line(svg,xp(0),yp(p),xp(maxQ),yp(p),"#e2e8f0",1);
+  text(svg,7,yp(p)+4,fmt(p),"#64748b",10);
+ }
+ line(svg,xp(0),yp(maxP),xp(0),yp(0),"#334155");
+ line(svg,xp(0),yp(0),xp(maxQ),yp(0),"#334155");
+ text(svg,57,25,"Precio");
+ text(svg,348,391,"Cantidad");
+ return {xp,yp,maxQ,maxP};
+}
+function plot(svg,fn,fr,color,opacity=1,dash=""){
+ let path="",open=false;
+ for(let q=0;q<=fr.maxQ;q+=.25){
+  const p=fn(q);
+  if(p<0||p>fr.maxP){open=false;continue}
+  path+=(open?"L":"M")+fr.xp(q).toFixed(2)+","+
+   fr.yp(p).toFixed(2)+" ";
+  open=true;
+ }
+ el(svg,"path",{d:path,fill:"none",stroke:color,
+  "stroke-width":3,opacity,"stroke-dasharray":dash});
+}
+function dot(svg,q,p,fr,color,name=""){
+ line(svg,fr.xp(0),fr.yp(p),fr.xp(q),fr.yp(p),color,1,"4 5");
+ line(svg,fr.xp(q),fr.yp(p),fr.xp(q),fr.yp(0),color,1,"4 5");
+ el(svg,"circle",{cx:fr.xp(q),cy:fr.yp(p),r:5,fill:color});
+ if(name)text(svg,fr.xp(q)+8,fr.yp(p)-10,name,color);
+}
+
+// NAVEGACIÓN
+document.querySelectorAll("[data-tab]").forEach(btn=>{
+ btn.onclick=()=>{
+  document.querySelectorAll("[data-tab]").forEach(b=>
+   b.classList.toggle("active",b===btn));
+  ["demand","supply","balance","experiment","cases",
+   "challenge","housing"].forEach(id=>
+   $(id).classList.toggle("hidden",id!==btn.dataset.tab));
+  window.scrollTo(0,0);
+ };
+});
+
+// MODELO GENERAL
+const gd=(p,shift=0)=>160+shift-2*p;
+const gs=(p,shift=0)=>20+shift+2*p;
+const generalEq=(d=0,s=0)=>({
+ p:(140+d-s)/4,
+ q:90+(d+s)/2
+});
+const demandFactors=[
+ ["0","Sin cambios",0,"Selecciona un factor para desplazar la demanda."],
+ ["taste","El producto se pone de moda",30,
+ "Aumenta la preferencia por el producto. A cada precio se desea comprar más."],
+ ["income","Aumenta la renta (bien normal)",25,
+ "Si se trata de un bien normal, la demanda aumenta con la renta."],
+ ["substitute","Sube el precio de un sustitutivo",20,
+ "Al encarecerse una alternativa, puede aumentar la demanda de este producto."],
+ ["complement","Sube el precio de un complementario",-20,
+ "Si ambos bienes se utilizan conjuntamente, puede disminuir la demanda."],
+ ["buyers","Disminuye el número de compradores",-30,
+ "Menos compradores reducen la demanda del mercado."],
+ ["expect","Se espera una subida futura de precios",15,
+ "Algunos consumidores pueden adelantar compras, aumentando la demanda actual."]
+];
+const supplyFactors=[
+ ["0","Sin cambios",0,"Selecciona un factor para desplazar la oferta."],
+ ["cost","Aumentan los costes de producción",-30,
+ "Con mayores costes, los vendedores pueden ofrecer menos a cada precio."],
+ ["technology","Una nueva tecnología reduce costes",30,
+ "La mejora productiva permite ofrecer más unidades."],
+ ["tax","Aumenta un impuesto por unidad",-20,
+ "El coste adicional reduce la oferta representada en este mercado."],
+ ["subsidy","Se concede una subvención por unidad",20,
+ "La ayuda reduce el coste neto de producir y puede aumentar la oferta."],
+ ["firms","Entran nuevos vendedores",25,
+ "Aumenta el número de empresas que venden el bien."],
+ ["harvest","Una plaga destruye parte de la cosecha",-30,
+ "La reducción de producción agrícola desplaza la oferta a la izquierda."]
+];
+function fillFactors(id,data){
+ $(id).innerHTML=data.map(x=>
+  `<option value="${x[0]}">${x[1]}</option>`).join("");
+}
+fillFactors("dFactor",demandFactors);
+fillFactors("sFactor",supplyFactors);
+
+function introGraph(type){
+ const demand=type==="d";
+ const svg=$(demand?"dGraph":"sGraph");
+ const fr=frame(svg);
+ const price=+$(demand?"dPrice":"sPrice").value;
+ const data=demand?demandFactors:supplyFactors;
+ const factor=data.find(x=>x[0]===
+  $(demand?"dFactor":"sFactor").value);
+ const shift=factor[2];
+ const fn=q=>demand?(160+shift-q)/2:(q-20-shift)/2;
+ const original=q=>demand?(160-q)/2:(q-20)/2;
+ if(shift)plot(svg,original,fr,demand?BLUE:ORANGE,.3,"6 5");
+ plot(svg,fn,fr,demand?BLUE:ORANGE);
+ const qty=demand?gd(price,shift):gs(price,shift);
+ dot(svg,qty,price,fr,GREEN,"A");
+ $(demand?"dPriceText":"sPriceText").textContent=
+  price+" € · "+fmt(qty)+" unidades";
+ $(demand?"dFactorText":"sFactorText").textContent=factor[3];
+ $(demand?"dInfo":"sInfo").innerHTML=
+  `<strong>${shift?"La curva se ha desplazado.":"Movimiento a lo largo de la curva."}</strong>
+  <p>A un precio de ${price} €, la cantidad ${demand?"demandada":"ofrecida"}
+  es ${fmt(qty)} unidades.</p>`;
+}
+["dPrice","dFactor"].forEach(id=>$(id).oninput=()=>introGraph("d"));
+["sPrice","sFactor"].forEach(id=>$(id).oninput=()=>introGraph("s"));
+$("resetDemand").onclick=()=>{
+ $("dPrice").value=35;$("dFactor").value="0";introGraph("d");
+};
+$("resetSupply").onclick=()=>{
+ $("sPrice").value=35;$("sFactor").value="0";introGraph("s");
+};
+
+const introQuizzes={
+ d:{
+ items:[["a","Disminuye la cantidad demandada: movimiento sobre la curva"],
+ ["b","La demanda se desplaza a la izquierda"],
+ ["c","Aumenta toda la demanda"]],
+ answer:"a",
+ explain:"El precio propio provoca un movimiento a lo largo de la curva, no un desplazamiento."
+ },
+ s:{
+ items:[["a","Aumenta la oferta"],
+ ["b","Disminuye la oferta"],
+ ["c","Aumenta la cantidad ofrecida por un cambio de precio"]],
+ answer:"b",
+ explain:"El aumento de costes reduce la oferta a cada precio."
+ },
+ b:{
+ items:[["a","Exceso de demanda"],
+ ["b","Exceso de oferta"],
+ ["c","Siempre equilibrio"]],
+ answer:"b",
+ explain:"Por encima del precio de equilibrio, la cantidad ofrecida supera a la demandada."
+ }
+};
+Object.entries(introQuizzes).forEach(([k,v])=>{
+ $(k+"Quiz").innerHTML=options("quiz_"+k,v.items);
+});
+window.checkIntroQuiz=function(k){
+ const v=introQuizzes[k],ans=selected("quiz_"+k);
+ if(!ans){message(k+"Feedback","Selecciona una respuesta.",false);return}
+ const ok=ans===v.answer;
+ message(k+"Feedback",
+  `<strong>${ok?"Correcto.":"Revisa tu respuesta."}</strong> ${v.explain}`,ok);
+ if(ok)finish({d:"demand",s:"supply",b:"balance"}[k]);
+};
+
+// EQUILIBRIO
+function drawBalance(){
+ const svg=$("bGraph"),fr=frame(svg),p=+$("bPrice").value;
+ plot(svg,q=>(160-q)/2,fr,BLUE);
+ plot(svg,q=>(q-20)/2,fr,ORANGE);
+ dot(svg,90,35,fr,GREEN,"E");
+ const qd=gd(p),qs=gs(p);
+ line(svg,fr.xp(0),fr.yp(p),fr.xp(fr.maxQ),
+  fr.yp(p),"#b45309",2,"6 4");
+ dot(svg,qd,p,fr,BLUE,"Qd");
+ dot(svg,qs,p,fr,ORANGE,"Qs");
+ $("bQd").textContent=fmt(qd);
+ $("bQs").textContent=fmt(qs);
+ const dif=qd-qs;
+ $("bInfo").innerHTML=Math.abs(dif)<.01?
+  "<strong>Equilibrio.</strong> Cantidad demandada y ofrecida coinciden: 90 unidades.":
+  dif>0?
+  `<strong>Exceso de demanda de ${fmt(dif)} unidades.</strong>
+  A este precio hay más compradores dispuestos a comprar
+  que unidades ofrecidas.`:
+  `<strong>Exceso de oferta de ${fmt(-dif)} unidades.</strong>
+  A este precio se ofrecen más unidades de las que se desean comprar.`;
+}
+$("bPrice").oninput=drawBalance;
+$("bEqBtn").onclick=()=>{$("bPrice").value=35;drawBalance()};
+
+// EXPERIMENTA
+let eD=0,eS=0,eBoth=false;
+function drawExperiment(){
+ const svg=$("eGraph"),fr=frame(svg);
+ const eq=generalEq(eD,eS),moved=eD||eS;
+ if(moved){
+  plot(svg,q=>(160-q)/2,fr,BLUE,.25,"6 5");
+  plot(svg,q=>(q-20)/2,fr,ORANGE,.25,"6 5");
+  dot(svg,90,35,fr,"#94a3b8","E₀");
+ }
+ plot(svg,q=>(160+eD-q)/2,fr,BLUE);
+ plot(svg,q=>(q-20-eS)/2,fr,ORANGE);
+ dot(svg,eq.q,eq.p,fr,GREEN,moved?"E₁":"E₀");
+ $("eP").textContent=fmt(eq.p)+" €";
+ $("eQ").textContent=fmt(eq.q);
+ $("eInfo").innerHTML=
+  `Respecto al equilibrio inicial, el precio
+  <strong>${sign(eq.p-35)}</strong> y la cantidad
+  <strong>${sign(eq.q-90)}</strong>.`;
+ if(moved)finish("experiment");
+}
+$("eD").oninput=e=>{
+ eD=+e.target.value;
+ if(!eBoth)eS=0;
+ $("eS").value=eS;drawExperiment();
+};
+$("eS").oninput=e=>{
+ eS=+e.target.value;
+ if(!eBoth)eD=0;
+ $("eD").value=eD;drawExperiment();
+};
+$("eBoth").onclick=()=>{
+ eBoth=!eBoth;
+ $("eBoth").textContent=eBoth?"Volver a una curva":
+ "Permitir cambios simultáneos";
+ if(!eBoth){eS=0;$("eS").value=0}
+ drawExperiment();
+};
+$("eReset").onclick=()=>{
+ eD=eS=0;$("eD").value=0;$("eS").value=0;drawExperiment();
+};
+
+// CASOS
+const cases=[
+ ["Una ola de calor","Más personas quieren comprar helados a cada precio.","DR","AA",
+ "La demanda aumenta. Suben precio y cantidad."],
+ ["Una plaga de limones","Una plaga reduce la cosecha murciana.","OL","AD",
+ "La oferta disminuye. Sube el precio y baja la cantidad."],
+ ["Nueva tecnología","Bajan los costes de fabricar bicicletas.","OR","DA",
+ "La oferta aumenta. Baja el precio y sube la cantidad."],
+ ["Una moda desaparece","Unas zapatillas pierden popularidad.","DL","DD",
+ "Disminuye la demanda. Bajan precio y cantidad."],
+ ["Electricidad cara","Sube el coste eléctrico de las panaderías.","OL","AD",
+ "Aumentan los costes y disminuye la oferta de pan."],
+ ["Un festival popular","Crece el interés por las entradas.","DR","AA",
+ "Aumenta la demanda."],
+ ["Cosecha abundante","Las condiciones permiten producir más melocotones.","OR","DA",
+ "Aumenta la oferta."],
+ ["Un producto sustitutivo","Baja el precio del té y algunos sustituyen café por té.","DL","DD",
+ "Disminuye la demanda de café."],
+ ["Problemas de suministro","Faltan componentes para fabricar ordenadores.","OL","AD",
+ "Disminuye la oferta de ordenadores."],
+ ["Más carriles bici","Crece el interés por comprar bicicletas.","DR","AA",
+ "Aumenta la demanda de bicicletas."],
+ ["Una innovación agrícola","El riego eficiente reduce el coste de producir tomates.","OR","DA",
+ "Aumenta la oferta."],
+ ["Un videojuego pierde atractivo","Sale una alternativa más interesante.","DL","DD",
+ "La demanda del juego anterior disminuye."]
+];
+const curveOptions=[["DR","Aumenta la demanda"],["DL","Disminuye la demanda"],
+ ["OR","Aumenta la oferta"],["OL","Disminuye la oferta"]];
+const effectOptions=[["AA","Suben precio y cantidad"],
+ ["AD","Sube el precio y baja la cantidad"],
+ ["DA","Baja el precio y sube la cantidad"],
+ ["DD","Bajan precio y cantidad"]];
+let caseIndex=0,caseHits=0;
+function renderCase(){
+ const c=cases[caseIndex];
+ $("caseCount").textContent=`Caso ${caseIndex+1} de ${cases.length}`;
+ $("caseTitle").textContent=c[0];$("caseText").textContent=c[1];
+ $("caseCurve").innerHTML=options("caseC",curveOptions);
+ $("caseEffect").innerHTML=options("caseE",effectOptions);
+ $("caseResult").replaceChildren();
+}
+$("caseCheck").onclick=()=>{
+ const c=cases[caseIndex],a=selected("caseC"),b=selected("caseE");
+ if(!a||!b){message("caseResult","Responde a las dos preguntas.",false);return}
+ const ok=a===c[2]&&b===c[3];
+ message("caseResult",c[4],ok);
+ if(ok){caseHits++;finish("cases")}
+};
+$("caseNext").onclick=()=>{
+ caseIndex=(caseIndex+1)%cases.length;renderCase();
+};
+
+// DESAFÍOS
+const challenges=[
+ ["Suben precio y cantidad. Solo cambia una curva.",
+ ["Aumenta demanda","Disminuye oferta","Aumenta oferta"],0,
+ "Un aumento de demanda eleva precio y cantidad."],
+ ["Disminuye oferta y la demanda no cambia.",
+ ["Bajan ambos","Sube precio y baja cantidad","Suben ambos"],1,
+ "Una menor oferta provoca un mayor precio y una menor cantidad."],
+ ["Cambia el precio del propio bien sin variar los demás factores.",
+ ["Se desplaza la demanda","Se desplaza la oferta",
+ "Movimiento sobre las curvas"],2,
+ "El propio precio modifica cantidades, no desplaza las curvas."],
+ ["Aumentan simultáneamente oferta y demanda.",
+ ["Aumenta la cantidad","Siempre sube el precio","Disminuye la cantidad"],0,
+ "La cantidad aumenta; el precio depende de ambos desplazamientos."],
+ ["Disminuye oferta y aumenta demanda.",
+ ["Baja el precio","Sube el precio y la cantidad es incierta",
+ "Siempre sube la cantidad"],1,
+ "Ambos cambios elevan el precio, pero actúan en sentido opuesto sobre la cantidad."]
+];
+function renderChallenges(){
+ $("challengeContent").innerHTML=challenges.map((c,i)=>
+  `<div class="control"><h3>${i+1}. ${c[0]}</h3>
+  <div class="options">${options("ch"+i,
+  c[1].map((v,j)=>[String(j),v]))}</div></div>`).join("");
+ $("challengeResult").replaceChildren();
+}
+$("challengeCheck").onclick=()=>{
+ let score=0,html="";
+ challenges.forEach((c,i)=>{
+  const a=selected("ch"+i);
+  if(a!==null&&+a===c[2])score++;
+  html+=`<p><strong>${i+1}.</strong> ${c[3]}</p>`;
+ });
+ message("challengeResult",
+  `<h3>Resultado: ${score}/${challenges.length}</h3>${html}`,score>=4);
+ if(score>=4)finish("challenge");
+};
+$("challengeReset").onclick=renderChallenges;
+
+// ALQUILER: MODELO HIPOTÉTICO
+// Qd=A+d-bP ; Qs=C+s+kP
+// Todas las curvas iniciales pasan por P=900 y Q=100.
+const BP=900,BQ=100,b=.075;
+const rentalPolicies=[
+ {id:"cap",name:"Establecer un precio máximo",
+ desc:"Se fija un precio máximo de 700 € en un mercado donde el equilibrio inicial es de 900 €.",
+ mechanism:"Precio máximo vinculante. No desplaza las curvas.",
+ d:0,ss:0,sl:0,cap:700,
+ limit:"La regulación real puede diferenciar contratos, zonas y condiciones. No todos los controles de alquiler equivalen a este caso simplificado."},
+ {id:"build",name:"Construir viviendas de alquiler",
+ desc:"Se impulsa la construcción de nuevas viviendas destinadas a alquiler.",
+ mechanism:"Aumento de la oferta, especialmente a largo plazo.",
+ d:0,ss:4,sl:22,
+ limit:"Construir requiere tiempo, financiación, suelo e infraestructuras."},
+ {id:"aid",name:"Ayudas a los inquilinos",
+ desc:"Se conceden ayudas económicas a determinados hogares.",
+ mechanism:"En este escenario, aumenta la demanda efectiva.",
+ d:12,ss:0,sl:0,
+ limit:"Una ayuda selectiva no desplaza necesariamente la demanda de todos los hogares por igual. El resultado depende de su diseño."},
+ {id:"tax",name:"Incentivos fiscales a propietarios",
+ desc:"Se incentiva ofrecer viviendas al alquiler residencial.",
+ mechanism:"Posible aumento de la oferta.",
+ d:0,ss:10,sl:13,
+ limit:"La reacción de los propietarios y el coste fiscal dependen de las condiciones concretas."},
+ {id:"tourism",name:"Restringir alquileres turísticos",
+ desc:"Algunas viviendas turísticas pasan al mercado residencial.",
+ mechanism:"Aumento hipotético de oferta residencial.",
+ d:0,ss:8,sl:11,
+ limit:"No todas las viviendas retiradas del uso turístico terminan alquilándose a residentes."},
+ {id:"land",name:"Agilizar licencias y facilitar suelo",
+ desc:"Se intenta facilitar la promoción de nuevas viviendas.",
+ mechanism:"Aumento potencial de oferta a largo plazo.",
+ d:0,ss:2,sl:18,
+ limit:"Depende de disponibilidad real de suelo, inversiones y otros condicionantes."}
+];
+const rental=k=>{
+ const A=BQ+b*BP,C=BQ-k*BP;
+ return {A,C,k};
+};
+function rentalSlope(){
+ return $("hHorizon").value==="short"?.018:.085;
+}
+function rentalEq(d=0,s=0){
+ const {A,C,k}=rental(rentalSlope());
+ const p=(A-C+d-s)/(b+k);
+ return {p,q:A+d-b*p};
+}
+function rentalAt(p,d=0,s=0){
+ const {A,C,k}=rental(rentalSlope());
+ return {qd:Math.max(0,A+d-b*p),
+ qs:Math.max(0,C+s+k*p)};
+}
+let hState={d:0,s:0,cap:null,active:false};
+const hCurrent=()=>{
+ const free=rentalEq(hState.d,hState.s);
+ if(hState.cap!==null&&hState.cap<free.p){
+  const at=rentalAt(hState.cap,hState.d,hState.s);
+  return {p:hState.cap,q:at.qs,cap:true,
+   qd:at.qd,qs:at.qs,free};
+ }
+ return {...free,cap:false};
+};
+function hDraw(){
+ const svg=$("hGraph"),fr=frame(svg,230,1800);
+ const {A,C,k}=rental(rentalSlope());
+ const st=hState;
+ const demand=q=>(A+st.d-q)/b;
+ const supply=q=>(q-C-st.s)/k;
+ if(st.active){
+  plot(svg,q=>(A-q)/b,fr,BLUE,.25,"6 5");
+  plot(svg,q=>(q-C)/k,fr,ORANGE,.25,"6 5");
+  dot(svg,BQ,BP,fr,"#94a3b8","E₀");
+ }
+ plot(svg,demand,fr,BLUE);
+ plot(svg,supply,fr,ORANGE);
+ const out=hCurrent();
+ if(out.cap){
+  line(svg,fr.xp(0),fr.yp(out.p),fr.xp(fr.maxQ),
+   fr.yp(out.p),"#b45309",2,"6 4");
+  dot(svg,out.qs,out.p,fr,ORANGE,"Qs");
+  dot(svg,out.qd,out.p,fr,BLUE,"Qd");
+  dot(svg,out.free.q,out.free.p,fr,GREEN,"E*");
+  $("hInfo").innerHTML=
+   `<strong>Precio máximo vinculante.</strong>
+   A este precio se demandan ${fmt(out.qd)} viviendas y se ofrecen
+   ${fmt(out.qs)}. El exceso de demanda es de
+   ${fmt(out.qd-out.qs)} viviendas.`;
+ }else{
+  dot(svg,out.q,out.p,fr,GREEN,st.active?"E₁":"E₀");
+  $("hInfo").innerHTML=st.active?
+   `Nuevo equilibrio: el alquiler <strong>${sign(out.p-BP)}</strong>
+   y la cantidad <strong>${sign(out.q-BQ)}</strong>.`:
+   "Equilibrio inicial hipotético: 900 € y 100 viviendas.";
+ }
+ $("hPrice").textContent=fmt(out.p)+" €/mes";
+ $("hQuantity").textContent=fmt(out.q);
+ $("hPriceLabel").textContent=out.cap?"Precio máximo":"Alquiler";
+ $("hQuantityLabel").textContent=out.cap?
+  "Viviendas ofrecidas a ese precio":"Viviendas alquiladas";
+}
+function policyValue(p){
+ return {d:p.d,s:$("hHorizon").value==="short"?p.ss:p.sl,
+ cap:p.cap??null,active:true};
+}
+function hSetPolicy(){
+ const p=rentalPolicies.find(x=>x.id===$("hPolicy").value);
+ $("hTitle").textContent=p.name;
+ $("hDescription").textContent=p.desc;
+ $("hMechanism").textContent=p.mechanism;
+ $("hPredictP").innerHTML=options("hp",
+  [["up","Sube"],["down","Baja"],["same","No cambia"]]);
+ $("hPredictQ").innerHTML=options("hq",
+  [["up","Sube"],["down","Baja"],["same","No cambia"]]);
+ hState={d:0,s:0,cap:null,active:false};
+ $("hFeedback").replaceChildren();
+ hDraw();
+}
+$("hPolicy").innerHTML=rentalPolicies.map(p=>
+ `<option value="${p.id}">${p.name}</option>`).join("");
+$("hPolicy").onchange=hSetPolicy;
+$("hHorizon").onchange=()=>{
+ $("hElasticity").textContent=$("hHorizon").value==="short"?
+ "La oferta es muy rígida: cuesta aumentar rápidamente el parque disponible.":
+ "La oferta responde más a los incentivos, aunque podría seguir siendo rígida en algunos territorios.";
+ hSetPolicy();
+};
+const dir=n=>Math.abs(n)<.001?"same":n>0?"up":"down";
+$("hSimulate").onclick=()=>{
+ const pp=selected("hp"),pq=selected("hq");
+ if(!pp||!pq){
+  message("hFeedback","Formula las dos predicciones antes de simular.",false);
+  return;
+ }
+ const p=rentalPolicies.find(x=>x.id===$("hPolicy").value);
+ hState=policyValue(p);hDraw();
+ const out=hCurrent();
+ const ok=pp===dir(out.p-BP)&&pq===dir(out.q-BQ);
+ message("hFeedback",
+  `<strong>${ok?"Predicción correcta.":"Compara tu predicción con el resultado."}</strong>
+  <p>Alquiler: ${sign(out.p-BP)}.
+  Cantidad: ${sign(out.q-BQ)}.</p>
+  <p><strong>Limitación:</strong> ${p.limit}</p>
+  <p>¿Quién podría beneficiarse, quién podría verse perjudicado
+  y qué efectos no representa el gráfico?</p>`,ok);
+ finish("housing");
+};
+$("hReset").onclick=hSetPolicy;
+$("hCombine").innerHTML=rentalPolicies.filter(p=>p.id!=="cap")
+ .map(p=>`<div class="control"><label>
+ <input type="checkbox" class="hCombineBox" value="${p.id}">
+ ${p.name}</label></div>`).join("");
+$("hCombineRun").onclick=()=>{
+ const ids=[...document.querySelectorAll(".hCombineBox:checked")]
+ .map(x=>x.value);
+ if(ids.length<1||ids.length>3){
+  message("hCombineResult","Selecciona entre una y tres medidas.",false);
+  return;
+ }
+ const ps=ids.map(id=>rentalPolicies.find(p=>p.id===id));
+ const long=$("hHorizon").value==="long";
+ hState={
+  d:ps.reduce((a,p)=>a+p.d,0),
+  s:ps.reduce((a,p)=>a+(long?p.sl:p.ss),0),
+  cap:null,active:true
+ };
+ hDraw();
+ const out=hCurrent();
+ message("hCombineResult",
+  `<strong>Resultado de la combinación hipotética:</strong>
+  ${fmt(out.p)} €/mes y ${fmt(out.q)} viviendas.
+  <p>Los desplazamientos se han sumado. En la realidad
+  podrían interactuar de formas distintas y requerir diferentes plazos.</p>`);
+ finish("housing");
+};
+$("hCombineClear").onclick=()=>{
+ document.querySelectorAll(".hCombineBox").forEach(x=>x.checked=false);
+ $("hCombineResult").replaceChildren();hSetPolicy();
+};
+
+// INICIAR
+introGraph("d");
+introGraph("s");
+drawBalance();
+drawExperiment();
+renderCase();
+renderChallenges();
+$("hHorizon").onchange();
+</script>
+</body>
+</html>
